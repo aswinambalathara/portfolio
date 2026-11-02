@@ -48,3 +48,8 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# local docs and AI agent config
+/docs/
+/.claude/
+/CLAUDE.md
