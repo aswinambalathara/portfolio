@@ -1,0 +1,14 @@
+# Production compose file for the Oracle server. The CI/CD workflow copies it to ~/portfolio.
+# Values come from ~/portfolio/.env on the server: IMAGE, IMAGE_TAG and APP_PORT.
+services:
+  web:
+    image: ${IMAGE:?set IMAGE in .env}:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    # Localhost only: the server's Nginx proxies to this port.
+    ports:
+      - '127.0.0.1:${APP_PORT:-3000}:8080'
+    mem_limit: 64m
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
