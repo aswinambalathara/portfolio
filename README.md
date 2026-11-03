@@ -34,4 +34,5 @@ The site runs at http://localhost:3000. All content lives in `src/content/site.t
 ## Deployment
 
 Every push to `main` runs the checks, builds an arm64 Docker image, pushes it to GitHub Container
-Registry and deploys it to the server over SSH.
+Registry and deploys it to the server over SSH. Server setup, GitHub settings and rollback are in
+[deploy/README.md](deploy/README.md).
