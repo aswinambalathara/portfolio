@@ -1,0 +1,67 @@
+@import 'tailwindcss';
+
+/* Dark, modern palette: blue-black background, violet accent, cyan for the name gradient. */
+@theme {
+  --color-bg: #090a10;
+  --color-surface: #11131c;
+  --color-line: rgb(255 255 255 / 0.08);
+  --color-fg: #e8eaf0;
+  --color-muted: #9399a8;
+  --color-accent: #a78bfa;
+  --color-accent-strong: #8b5cf6;
+  --color-cyan: #22d3ee;
+  --color-online: #4ade80;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-bg font-sans text-fg antialiased;
+    /* Faint grid with a violet glow at the top. */
+    background-image:
+      radial-gradient(60rem 30rem at 50% -8rem, rgb(139 92 246 / 0.18), transparent 70%),
+      linear-gradient(rgb(255 255 255 / 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.025) 1px, transparent 1px);
+    background-size:
+      100% 100%,
+      48px 48px,
+      48px 48px;
+    background-attachment: fixed;
+  }
+  ::selection {
+    @apply bg-accent/30;
+  }
+  :focus-visible {
+    @apply rounded-md outline-2 outline-offset-2 outline-accent;
+  }
+}
+
+/* The hero fades up once on load. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@utility animate-rise {
+  animation: rise 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
