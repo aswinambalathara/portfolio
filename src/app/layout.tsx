@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
 import { Nav } from '@/components/nav'
+import { Particles } from '@/components/particles'
 import { SiteFooter } from '@/components/site-footer'
 import { site } from '@/content/site'
 import './globals.css'
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </a>
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-20 bg-dots" />
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-20 bg-glow" />
+        <Particles />
         <Nav />
         <main id="main" className="flex-1">
           {children}
