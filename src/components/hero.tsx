@@ -23,18 +23,18 @@ export function Hero() {
     >
       <div className="relative animate-rise">
         <div className="absolute -inset-6 rounded-full bg-accent-strong/25 blur-3xl" aria-hidden />
-        <div className="relative rounded-full bg-linear-to-br from-accent via-accent-strong to-cyan p-[3px]">
+        <div className="relative rounded-full bg-linear-to-br from-amber-200 via-amber-400 to-orange-500 p-[3px]">
           {site.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- static export, no image optimisation
             <img
               src={site.avatarUrl}
               alt={site.name}
-              width={144}
-              height={144}
-              className="size-32 rounded-full object-cover sm:size-36"
+              width={208}
+              height={208}
+              className="size-40 rounded-full object-cover sm:size-52"
             />
           ) : (
-            <div className="grid size-32 place-items-center rounded-full bg-surface font-mono text-4xl font-semibold text-fg sm:size-36">
+            <div className="grid size-40 place-items-center rounded-full bg-surface font-mono text-4xl font-semibold text-fg sm:size-52">
               {initials}
             </div>
           )}

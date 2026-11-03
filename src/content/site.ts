@@ -47,8 +47,7 @@ export const site = {
   email: 'hello@example.com',
   // TODO: put the résumé at public/resume.pdf, then set this to '/resume.pdf'. Empty hides the buttons.
   resumeUrl: '',
-  // TODO: put a square photo at public/avatar.jpg, then set this to '/avatar.jpg'. Empty shows initials.
-  avatarUrl: '',
+  avatarUrl: '/avatar.jpg',
   // TODO: real profile URLs. Entries with an empty href are hidden.
   socials: [
     { platform: 'github', href: '' },
