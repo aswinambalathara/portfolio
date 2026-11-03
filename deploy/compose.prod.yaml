@@ -1,0 +1,23 @@
+# Portfolio on the primary server. CI sends this file to /opt/apps/portfolio/compose.yaml on every
+# deploy; the server's deploy.sh sets TAG (the image tag, sha-<commit>) in /opt/apps/portfolio/.env.
+# The port binds to 127.0.0.1: the server's Nginx is the only public entry point. 3100 is the
+# portfolio's port in the server's port registry.
+name: portfolio
+
+services:
+  web:
+    image: ghcr.io/aswinambalathara/portfolio:${TAG:?TAG is set by deploy.sh}
+    ports:
+      - "127.0.0.1:3100:8080"
+    # The image's HEALTHCHECK (/healthz) gates deploy.sh's rollout and rollback
+    mem_limit: 64m
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/cache/nginx
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped

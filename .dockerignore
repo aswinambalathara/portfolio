@@ -10,4 +10,4 @@ AGENTS.md
 .env*
 *.md
 Dockerfile
-docker-compose.yml
+deploy
