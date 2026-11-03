@@ -5,7 +5,11 @@ export type Social = { platform: 'github' | 'linkedin'; href: string }
 
 // `brand` is a Simple Icons slug (shown in the brand colour); `ui` is a generic icon for skills
 // without a logo.
-export type Skill = { name: string; brand?: string; ui?: 'api' | 'llm' | 'agent' }
+export type Skill = {
+  name: string
+  brand?: string
+  ui?: 'api' | 'llm' | 'agent' | 'state' | 'queue'
+}
 
 export type SkillGroup = { title: string; skills: Skill[] }
 
@@ -67,6 +71,8 @@ export const skillGroups: SkillGroup[] = [
       { name: 'React', brand: 'react' },
       { name: 'Next.js', brand: 'nextdotjs' },
       { name: 'Tailwind CSS', brand: 'tailwindcss' },
+      { name: 'Redux', brand: 'redux' },
+      { name: 'Zustand', ui: 'state' },
     ],
   },
   {
@@ -74,7 +80,10 @@ export const skillGroups: SkillGroup[] = [
     skills: [
       { name: 'Node.js', brand: 'nodedotjs' },
       { name: 'Express', brand: 'express' },
+      { name: 'FastAPI', brand: 'fastapi' },
       { name: 'REST APIs', ui: 'api' },
+      { name: 'BullMQ', ui: 'queue' },
+      { name: 'Razorpay', brand: 'razorpay' },
     ],
   },
   {
@@ -82,11 +91,17 @@ export const skillGroups: SkillGroup[] = [
     skills: [
       { name: 'LLM APIs', ui: 'llm' },
       { name: 'Agentic Workflows', ui: 'agent' },
+      { name: 'LangChain', brand: 'langchain' },
+      { name: 'LangGraph', brand: 'langgraph' },
+      { name: 'MCP', brand: 'modelcontextprotocol' },
     ],
   },
   {
     title: 'Databases',
-    skills: [{ name: 'MongoDB', brand: 'mongodb' }],
+    skills: [
+      { name: 'MongoDB', brand: 'mongodb' },
+      { name: 'Redis', brand: 'redis' },
+    ],
   },
   {
     title: 'DevOps & Tools',
@@ -95,6 +110,9 @@ export const skillGroups: SkillGroup[] = [
       { name: 'Git', brand: 'git' },
       { name: 'GitHub Actions', brand: 'githubactions' },
       { name: 'Linux', brand: 'linux' },
+      { name: 'Figma', brand: 'figma' },
+      { name: 'Cursor', brand: 'cursor' },
+      { name: 'Claude Code', brand: 'claude' },
     ],
   },
 ]
