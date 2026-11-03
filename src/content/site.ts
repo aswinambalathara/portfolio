@@ -42,9 +42,13 @@ export const site = {
     'Full-stack developer (MERN · Next.js) with 2 years of experience, currently building agentic workflows with Python and LLMs. Based in Trivandrum, Kerala.',
   availability: 'Open to roles · Remote, Kerala, Bengaluru, Chennai, Dubai',
   url: 'https://portfolio.aswin-ambalathara.space',
+  city: 'Trivandrum',
+  timeZone: 'Asia/Kolkata',
 
-  // TODO: real email address.
-  email: 'hello@example.com',
+  email: 'aswinnairtm@gmail.com',
+  // TODO: free Web3Forms access key (web3forms.com). It is public by design. While empty, the
+  // contact form opens the visitor's email app instead.
+  formAccessKey: '',
   // TODO: put the résumé at public/resume.pdf, then set this to '/resume.pdf'. Empty hides the buttons.
   resumeUrl: '',
   avatarUrl: '/avatar.jpg',
