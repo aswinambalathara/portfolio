@@ -1,18 +1,28 @@
 // All site content lives here for now. When the CMS is added, this file is what gets replaced.
 // TODO markers show values that still need real details before launch.
 
-export type Link = { label: string; href: string }
-
 export type Social = { platform: 'github' | 'linkedin'; href: string }
 
-export type SkillGroup = { title: string; skills: { name: string; icon?: string }[] }
+// `brand` is a Simple Icons slug (shown in the brand colour); `ui` is a generic icon for skills
+// without a logo.
+export type Skill = { name: string; brand?: string; ui?: 'api' | 'llm' | 'agent' }
+
+export type SkillGroup = { title: string; skills: Skill[] }
 
 export type Project = {
+  slug: string
   title: string
-  description: string
+  summary: string
   context: 'work' | 'personal'
   status: 'live' | 'in-progress'
+  role: string
+  timeline: string
   tech: string[]
+  overview: string
+  problem: string
+  features: string[]
+  challenges: string
+  outcome: string
   // Work projects under NDA: links are never shown.
   confidential?: boolean
   repoUrl?: string
@@ -44,77 +54,129 @@ export const site = {
 
 export const skillGroups: SkillGroup[] = [
   {
-    title: 'Frontend',
+    title: 'Programming Languages',
     skills: [
-      { name: 'React', icon: 'react' },
-      { name: 'Next.js', icon: 'nextdotjs' },
-      { name: 'TypeScript', icon: 'typescript' },
-      { name: 'JavaScript', icon: 'javascript' },
-      { name: 'Tailwind CSS', icon: 'tailwindcss' },
+      { name: 'JavaScript', brand: 'javascript' },
+      { name: 'TypeScript', brand: 'typescript' },
+      { name: 'Python', brand: 'python' },
     ],
   },
   {
-    title: 'Backend',
+    title: 'Frontend Development',
     skills: [
-      { name: 'Node.js', icon: 'nodedotjs' },
-      { name: 'Express', icon: 'express' },
-      { name: 'REST APIs' },
+      { name: 'React', brand: 'react' },
+      { name: 'Next.js', brand: 'nextdotjs' },
+      { name: 'Tailwind CSS', brand: 'tailwindcss' },
+    ],
+  },
+  {
+    title: 'Backend Development',
+    skills: [
+      { name: 'Node.js', brand: 'nodedotjs' },
+      { name: 'Express', brand: 'express' },
+      { name: 'REST APIs', ui: 'api' },
     ],
   },
   {
     title: 'AI & Agents',
     skills: [
-      { name: 'Python', icon: 'python' },
-      { name: 'LLM APIs' },
-      { name: 'Agentic workflows' },
+      { name: 'LLM APIs', ui: 'llm' },
+      { name: 'Agentic Workflows', ui: 'agent' },
     ],
   },
   {
     title: 'Databases',
-    skills: [{ name: 'MongoDB', icon: 'mongodb' }],
+    skills: [{ name: 'MongoDB', brand: 'mongodb' }],
   },
   {
     title: 'DevOps & Tools',
     skills: [
-      { name: 'Docker', icon: 'docker' },
-      { name: 'Git', icon: 'git' },
-      { name: 'GitHub Actions', icon: 'githubactions' },
-      { name: 'Linux', icon: 'linux' },
+      { name: 'Docker', brand: 'docker' },
+      { name: 'Git', brand: 'git' },
+      { name: 'GitHub Actions', brand: 'githubactions' },
+      { name: 'Linux', brand: 'linux' },
     ],
   },
 ]
 
-// TODO: replace these sample projects with real ones.
+// TODO: replace these sample projects with real ones. Every text field below is a placeholder.
 export const projects: Project[] = [
   {
+    slug: 'ai-agent-workflow-platform',
     title: 'AI Agent Workflow Platform',
-    description:
+    summary:
       'Sample project: an internal AI agent that automates a multi-step business workflow with tool calling and LLMs.',
     context: 'work',
     status: 'live',
-    tech: ['Python', 'LLM APIs', 'Agentic workflows'],
+    role: 'Sample role: designed and built the agent and its tool integrations',
+    timeline: 'Sample timeline',
+    tech: ['Python', 'LLM APIs', 'Agentic Workflows'],
+    overview: 'Sample overview: what the project is, who uses it and why it exists.',
+    problem: 'Sample problem: the manual process this replaced and why it was slow or error-prone.',
+    features: [
+      'Sample feature: what the agent does on its own',
+      'Sample feature: which tools or systems it connects to',
+      'Sample feature: how people review or approve its work',
+    ],
+    challenges: 'Sample challenges: the hardest technical problems and how they were solved.',
+    outcome: 'Sample outcome: the measurable result, such as time saved or errors reduced.',
     confidential: true,
   },
   {
+    slug: 'full-stack-web-app',
     title: 'Full-Stack Web App',
-    description:
-      'Sample project: a MERN application built end to end, from API design to deployment.',
+    summary: 'Sample project: a MERN application built end to end, from API design to deployment.',
     context: 'personal',
     status: 'live',
+    role: 'Sample role: solo developer',
+    timeline: 'Sample timeline',
     tech: ['React', 'Node.js', 'Express', 'MongoDB'],
+    overview: 'Sample overview: what the app does and who it is for.',
+    problem: 'Sample problem: the need this app answers.',
+    features: [
+      'Sample feature: the main thing a user can do',
+      'Sample feature: authentication or accounts',
+      'Sample feature: an interesting technical detail',
+    ],
+    challenges: 'Sample challenges: what was hard and what was learned.',
+    outcome: 'Sample outcome: who uses it, or what it proved.',
   },
   {
+    slug: 'agentic-chatbot',
     title: 'Agentic Chatbot',
-    description: 'Sample project: a chatbot that uses tools to answer questions and take actions.',
+    summary: 'Sample project: a chatbot that uses tools to answer questions and take actions.',
     context: 'personal',
     status: 'in-progress',
+    role: 'Sample role: solo developer',
+    timeline: 'Sample timeline',
     tech: ['Next.js', 'TypeScript', 'LLM APIs'],
+    overview: 'Sample overview: what the chatbot helps with.',
+    problem: 'Sample problem: why a tool-using chatbot was needed.',
+    features: [
+      'Sample feature: streaming answers',
+      'Sample feature: tools the chatbot can call',
+      'Sample feature: how answers stay grounded',
+    ],
+    challenges: 'Sample challenges: reliability, prompts or tool design.',
+    outcome: 'Sample outcome: what works today and what is next.',
   },
   {
+    slug: 'workflow-automation-agents',
     title: 'Workflow Automation Agents',
-    description: 'Sample project: a set of cooperating agents that automate a repetitive task.',
+    summary: 'Sample project: a set of cooperating agents that automate a repetitive task.',
     context: 'personal',
     status: 'in-progress',
-    tech: ['Python', 'Agentic workflows'],
+    role: 'Sample role: solo developer',
+    timeline: 'Sample timeline',
+    tech: ['Python', 'Agentic Workflows'],
+    overview: 'Sample overview: the task these agents automate.',
+    problem: 'Sample problem: why doing it by hand did not scale.',
+    features: [
+      'Sample feature: how the agents split the work',
+      'Sample feature: how they hand off to each other',
+      'Sample feature: how failures are handled',
+    ],
+    challenges: 'Sample challenges: coordination between agents.',
+    outcome: 'Sample outcome: current status and next steps.',
   },
 ]

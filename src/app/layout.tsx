@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
+import { Nav } from '@/components/nav'
+import { SiteFooter } from '@/components/site-footer'
 import { site } from '@/content/site'
 import './globals.css'
 
@@ -9,12 +11,10 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: `${site.name} · ${site.role}`,
+  title: { default: `${site.name} · ${site.role}`, template: `%s · ${site.name}` },
   description: site.tagline,
-  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
-    url: '/',
     title: `${site.name} · ${site.role}`,
     description: site.tagline,
     siteName: site.name,
@@ -28,7 +28,21 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body className="min-h-svh">{children}</body>
+      <body className="flex min-h-svh flex-col">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-bg"
+        >
+          Skip to content
+        </a>
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-20 bg-dots" />
+        <div aria-hidden className="pointer-events-none fixed inset-0 -z-20 bg-glow" />
+        <Nav />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+        <SiteFooter />
+      </body>
     </html>
   )
 }
