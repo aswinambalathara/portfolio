@@ -1,6 +1,7 @@
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 
+import { BrandIcon } from '@/components/brand-icon'
 import { ProjectBadges } from '@/components/project-badges'
 import { SkillLogo } from '@/components/skill-logo'
 import type { Project } from '@/content/site'
@@ -13,14 +14,18 @@ const banners = [
   'from-cyan/20 via-accent/15 to-accent-strong/30',
 ]
 
+const iconLink =
+  'relative z-10 grid size-8 place-items-center rounded-full border border-line text-muted transition-colors hover:border-accent/60 hover:text-accent'
+
+// The title link stretches over the whole card (after:inset-0), so the card stays clickable while
+// the GitHub and live links sit above it as separate links. Confidential projects show neither.
 export function ProjectCard({ project, index }: { project: Project; index: number }) {
   const extraTech = project.tech.length - 3
+  const repoUrl = project.confidential ? undefined : project.repoUrl
+  const liveUrl = project.confidential ? undefined : project.liveUrl
 
   return (
-    <Link
-      href={`/projects/${project.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-accent-strong/15"
-    >
+    <article className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-xl hover:shadow-accent-strong/15 has-[a:focus-visible]:border-accent">
       <div
         className={`relative flex h-28 items-center justify-center border-b border-line bg-linear-to-br ${banners[index % banners.length]}`}
       >
@@ -47,7 +52,12 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       <div className="flex flex-1 flex-col p-5">
         <ProjectBadges project={project} />
         <h2 className="mt-3 text-lg font-semibold tracking-tight transition-colors group-hover:text-accent">
-          {project.title}
+          <Link
+            href={`/projects/${project.slug}`}
+            className="outline-none after:absolute after:inset-0 after:content-['']"
+          >
+            {project.title}
+          </Link>
         </h2>
         <p className="mt-1.5 line-clamp-3 text-sm text-pretty text-muted">{project.summary}</p>
         <ul className="mt-4 flex flex-wrap gap-1.5" aria-label="Tech used">
@@ -69,16 +79,40 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
         <div className="mt-auto pt-5">
           <div className="flex items-center justify-between gap-3 border-t border-line pt-3 font-mono text-[11px] text-muted">
             <span className="truncate">{project.timeline}</span>
-            <span className="inline-flex shrink-0 items-center gap-1 text-accent">
-              View
-              <ArrowUpRight
-                aria-hidden
-                className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
-            </span>
+            <div className="flex shrink-0 items-center gap-2">
+              {repoUrl && (
+                <a
+                  href={repoUrl}
+                  rel="noopener"
+                  target="_blank"
+                  aria-label={`${project.title} on GitHub`}
+                  className={iconLink}
+                >
+                  <BrandIcon slug="github" className="size-3.5" />
+                </a>
+              )}
+              {liveUrl && (
+                <a
+                  href={liveUrl}
+                  rel="noopener"
+                  target="_blank"
+                  aria-label={`${project.title} live site`}
+                  className={iconLink}
+                >
+                  <ExternalLink aria-hidden className="size-3.5" />
+                </a>
+              )}
+              <span className="inline-flex items-center gap-1 pl-1 text-accent">
+                View
+                <ArrowUpRight
+                  aria-hidden
+                  className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </Link>
+    </article>
   )
 }

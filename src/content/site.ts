@@ -18,7 +18,7 @@ export type Project = {
   title: string
   summary: string
   context: 'work' | 'personal'
-  status: 'live' | 'in-progress'
+  status: 'live' | 'in-progress' | 'completed'
   role: string
   timeline: string
   tech: string[]
@@ -42,8 +42,6 @@ export const site = {
     'Full-stack developer (MERN · Next.js) with 2 years of experience, currently building agentic workflows with Python and LLMs. Based in Trivandrum, Kerala.',
   availability: 'Open to roles · Remote, Kerala, Bengaluru, Chennai, Dubai',
   url: 'https://portfolio.aswin-ambalathara.space',
-  city: 'Trivandrum',
-  timeZone: 'Asia/Kolkata',
 
   email: 'aswinnairtm@gmail.com',
   // TODO: free Web3Forms access key (web3forms.com). It is public by design. While empty, the
@@ -52,9 +50,9 @@ export const site = {
   // TODO: put the résumé at public/resume.pdf, then set this to '/resume.pdf'. Empty hides the buttons.
   resumeUrl: '',
   avatarUrl: '/avatar.jpg',
-  // TODO: real profile URLs. Entries with an empty href are hidden.
+  // TODO: LinkedIn URL. Entries with an empty href are hidden.
   socials: [
-    { platform: 'github', href: '' },
+    { platform: 'github', href: 'https://github.com/aswinambalathara' },
     { platform: 'linkedin', href: '' },
   ] satisfies Social[] as Social[],
 }
@@ -120,84 +118,99 @@ export const skillGroups: SkillGroup[] = [
   },
 ]
 
-// TODO: replace these sample projects with real ones. Every text field below is a placeholder.
+// Projects from github.com/aswinambalathara, newest first. Tethr is the current project.
 export const projects: Project[] = [
   {
-    slug: 'ai-agent-workflow-platform',
-    title: 'AI Agent Workflow Platform',
+    slug: 'tethr',
+    title: 'Tethr',
     summary:
-      'Sample project: an internal AI agent that automates a multi-step business workflow with tool calling and LLMs.',
-    context: 'work',
-    status: 'live',
-    role: 'Sample role: designed and built the agent and its tool integrations',
-    timeline: 'Sample timeline',
-    tech: ['Python', 'LLM APIs', 'Agentic Workflows'],
-    overview: 'Sample overview: what the project is, who uses it and why it exists.',
-    problem: 'Sample problem: the manual process this replaced and why it was slow or error-prone.',
-    features: [
-      'Sample feature: what the agent does on its own',
-      'Sample feature: which tools or systems it connects to',
-      'Sample feature: how people review or approve its work',
-    ],
-    challenges: 'Sample challenges: the hardest technical problems and how they were solved.',
-    outcome: 'Sample outcome: the measurable result, such as time saved or errors reduced.',
-    confidential: true,
-  },
-  {
-    slug: 'full-stack-web-app',
-    title: 'Full-Stack Web App',
-    summary: 'Sample project: a MERN application built end to end, from API design to deployment.',
+      'A developer contribution ledger that logs work from your AI coding IDE over MCP and syncs daily tables, weekly summaries and monthly appraisal dossiers to Google Docs.',
     context: 'personal',
     status: 'live',
-    role: 'Sample role: solo developer',
-    timeline: 'Sample timeline',
-    tech: ['React', 'Node.js', 'Express', 'MongoDB'],
-    overview: 'Sample overview: what the app does and who it is for.',
-    problem: 'Sample problem: the need this app answers.',
-    features: [
-      'Sample feature: the main thing a user can do',
-      'Sample feature: authentication or accounts',
-      'Sample feature: an interesting technical detail',
+    role: 'Solo developer: product, frontend, backend and MCP server',
+    timeline: 'Sep 2026 – present',
+    tech: [
+      'Next.js',
+      'TypeScript',
+      'FastAPI',
+      'Python',
+      'MongoDB',
+      'MCP',
+      'Gemini',
+      'Clerk',
+      'Google Docs API',
     ],
-    challenges: 'Sample challenges: what was hard and what was learned.',
-    outcome: 'Sample outcome: who uses it, or what it proved.',
+    overview:
+      'Tethr records every contribution as Contribution → Outcome → Evidence: what you did, the impact it had, and proof such as a PR, commit or ticket. Entries come straight from AI coding IDEs (Cursor, Claude Code, Antigravity, Windsurf) through the Model Context Protocol, or from a web dashboard, and are written to a connected Google Doc.',
+    problem:
+      'Before a performance review, developers dig through months of git history, closed PRs and chat threads to remember what they shipped and why it mattered. A vague work diary does not hold up, and nobody keeps one by hand.',
+    features: [
+      'FastMCP server with add_task, update_task, get_tasks and sync_docs tools, so the IDE assistant logs work from the code it just changed',
+      'Three-tier Google Docs ledger: a 10-column daily contribution table, Saturday weekly summaries and month-end appraisal dossiers',
+      'Gemini 2.0 Flash writes weekly and monthly summaries, with a template fallback that works offline or without an API key',
+      'Custom MCP sign-in screen with silent Clerk session checks, loopback redirect and a copy-code fallback for IDEs',
+      'Configurable sync cadence (real-time, end of day or weekly) with a cap on manual summary syncs',
+      'Dashboard with impact table, Kanban view and starred career highlights for promotion packets',
+    ],
+    challenges:
+      'Designing an OAuth-style authorization flow that works inside IDE MCP clients, with a loopback redirect and a manual-code fallback; verifying Clerk JWTs (RS256) in FastAPI; encrypting stored Google tokens with AES-256-GCM; and formatting structured tables reliably through the Google Docs batchUpdate API.',
+    outcome:
+      'Live, with the MCP tools, Google Docs sync and AI-written summaries running across a Next.js frontend and a FastAPI backend. New features are being added.',
+    repoUrl: 'https://github.com/aswinambalathara/Tethr',
+    liveUrl: 'https://tethr.aswin-ambalathara.space',
   },
   {
-    slug: 'agentic-chatbot',
-    title: 'Agentic Chatbot',
-    summary: 'Sample project: a chatbot that uses tools to answer questions and take actions.',
+    slug: 'meet-grid',
+    title: 'Meet Grid',
+    summary:
+      'An event management platform with separate user and admin apps, built on a layered TypeScript backend.',
     context: 'personal',
     status: 'in-progress',
-    role: 'Sample role: solo developer',
-    timeline: 'Sample timeline',
-    tech: ['Next.js', 'TypeScript', 'LLM APIs'],
-    overview: 'Sample overview: what the chatbot helps with.',
-    problem: 'Sample problem: why a tool-using chatbot was needed.',
+    role: 'Solo developer: frontend and backend',
+    timeline: 'Oct 2024 – present',
+    tech: ['Next.js', 'TypeScript', 'Express', 'Node.js', 'MongoDB', 'Redux', 'Tailwind CSS'],
+    overview:
+      'Meet Grid lets people discover and manage events, while admins manage users and event categories. The Next.js frontend talks to an Express and TypeScript API organised with the repository pattern.',
+    problem:
+      'Event apps mix user, admin and data-access logic quickly. The goal was a clean, layered backend that stays easy to extend as features grow.',
     features: [
-      'Sample feature: streaming answers',
-      'Sample feature: tools the chatbot can call',
-      'Sample feature: how answers stay grounded',
+      'User and admin areas with separate authentication and routes',
+      'Sign-in with email or Google (Passport OAuth 2.0), with JWT cookies',
+      'Event categories, event listings and user management for admins',
+      'Location search and maps with Mapbox, and image upload and cropping with Cloudinary',
+      'Forms validated with React Hook Form and Zod on the client and Joi on the server',
     ],
-    challenges: 'Sample challenges: reliability, prompts or tool design.',
-    outcome: 'Sample outcome: what works today and what is next.',
+    challenges:
+      'Keeping the backend layered (routes, controllers, services, repositories) so business logic never talks to Mongoose directly, and sharing typed interfaces between the API and the Next.js app.',
+    outcome:
+      'The user and admin foundations are built: authentication, event categories, listings and user management on a layered backend. The remaining features are next.',
+    repoUrl: 'https://github.com/aswinambalathara/Meet_Grid',
   },
   {
-    slug: 'workflow-automation-agents',
-    title: 'Workflow Automation Agents',
-    summary: 'Sample project: a set of cooperating agents that automate a repetitive task.',
+    slug: 'holahaute',
+    title: 'Holahaute',
+    summary:
+      'A full e-commerce store with a customer shop, admin dashboard, Razorpay payments and sales reports.',
     context: 'personal',
-    status: 'in-progress',
-    role: 'Sample role: solo developer',
-    timeline: 'Sample timeline',
-    tech: ['Python', 'Agentic Workflows'],
-    overview: 'Sample overview: the task these agents automate.',
-    problem: 'Sample problem: why doing it by hand did not scale.',
+    status: 'completed',
+    role: 'Solo developer: full stack',
+    timeline: 'Feb 2024 – Mar 2025',
+    tech: ['Node.js', 'Express', 'MongoDB', 'EJS', 'Razorpay', 'JavaScript'],
+    overview:
+      'Holahaute is a server-rendered online store built with Express, MongoDB and EJS. Customers browse, add to cart or wishlist and pay online; admins manage the catalogue, offers and orders from a dashboard.',
+    problem:
+      'A real shop needs much more than a product list: accounts, carts, offers, payments, order tracking and reporting for the owner.',
     features: [
-      'Sample feature: how the agents split the work',
-      'Sample feature: how they hand off to each other',
-      'Sample feature: how failures are handled',
+      'Product, category, banner, offer and coupon management in an admin dashboard',
+      'Cart, wishlist, wallet, addresses, ratings and order history for customers',
+      'Online payments with Razorpay',
+      'Email OTP verification and Google sign-in',
+      'Sales reports exported to Excel and PDF, and image cropping for product photos',
     ],
-    challenges: 'Sample challenges: coordination between agents.',
-    outcome: 'Sample outcome: current status and next steps.',
+    challenges:
+      'Keeping cart totals, coupons, offers and wallet balances consistent through checkout and payment, and generating downloadable sales reports on the server.',
+    outcome:
+      'Completed, covering the full shop and admin workflow from browsing to payment and reporting.',
+    repoUrl: 'https://github.com/aswinambalathara/Holahaute',
   },
 ]

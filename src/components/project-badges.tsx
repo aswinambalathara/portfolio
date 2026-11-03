@@ -1,6 +1,12 @@
 import type { Project } from '@/content/site'
 
-// Work or Personal, plus live or in-progress status. Text first, colour second.
+const statuses: Record<Project['status'], { label: string; dot: string }> = {
+  live: { label: 'Live', dot: 'bg-online' },
+  'in-progress': { label: 'In progress', dot: 'bg-amber-400' },
+  completed: { label: 'Completed', dot: 'bg-muted' },
+}
+
+// Work or Personal, plus the project's status. Text first, colour second.
 export function ProjectBadges({ project }: { project: Project }) {
   return (
     <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
@@ -14,11 +20,8 @@ export function ProjectBadges({ project }: { project: Project }) {
         {project.context === 'work' ? 'Work' : 'Personal'}
       </span>
       <span className="inline-flex items-center gap-1.5 text-muted">
-        <span
-          aria-hidden
-          className={`size-1.5 rounded-full ${project.status === 'live' ? 'bg-online' : 'bg-amber-400'}`}
-        />
-        {project.status === 'live' ? 'Live' : 'In progress'}
+        <span aria-hidden className={`size-1.5 rounded-full ${statuses[project.status].dot}`} />
+        {statuses[project.status].label}
       </span>
     </div>
   )

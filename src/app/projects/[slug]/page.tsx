@@ -75,6 +75,7 @@ export default async function ProjectPage({ params }: Props) {
                 <a
                   href={project.liveUrl}
                   rel="noopener"
+                  target="_blank"
                   className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:bg-fg"
                 >
                   <ExternalLink aria-hidden className="size-4" />
@@ -85,10 +86,11 @@ export default async function ProjectPage({ params }: Props) {
                 <a
                   href={project.repoUrl}
                   rel="noopener"
+                  target="_blank"
                   className="inline-flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-sm font-medium transition-colors hover:border-accent/60 hover:text-accent"
                 >
                   <BrandIcon slug="github" className="size-4" />
-                  Source code
+                  View on GitHub
                 </a>
               )}
             </>
