@@ -42,6 +42,19 @@ export const getFeaturedProjects = () =>
     findProjects({ and: [published, { featured: { equals: true } }] }, 4),
   )
 
+// Live Preview (FR-08): the latest draft for the logged-in admin. Uncached, and still filtered.
+export async function getProjectPreview(slug: string) {
+  const payload = await getPayloadClient()
+  const { docs } = await payload.find({
+    collection: 'projects',
+    where: { slug: { equals: slug } },
+    draft: true,
+    depth: 1,
+    limit: 1,
+  })
+  return docs[0] ? toPublicProject(docs[0]) : null
+}
+
 export const getProjectBySlug = (slug: string) =>
   cached(['project', slug], [TAGS.projects, projectTag(slug)], async () => {
     const [project] = await findProjects({ and: [published, { slug: { equals: slug } }] }, 1)

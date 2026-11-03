@@ -14,6 +14,15 @@ export const Projects: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'context', 'status', 'featured', '_status'],
+    // FR-08: /api/preview checks the admin session, turns on draft mode and opens the project page.
+    livePreview: {
+      url: ({ data }) =>
+        typeof data?.slug === 'string'
+          ? `/api/preview?slug=${encodeURIComponent(data.slug)}`
+          : null,
+    },
+    preview: (doc) =>
+      typeof doc?.slug === 'string' ? `/api/preview?slug=${encodeURIComponent(doc.slug)}` : null,
   },
   access: adminOnly,
   versions: { drafts: true },

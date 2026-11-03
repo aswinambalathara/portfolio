@@ -1,11 +1,9 @@
 import type { Metadata } from 'next'
 
-import { Badge } from '@/components/ui/badge'
+import { AvailabilityBadge } from '@/components/availability-badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Section, SectionLabel } from '@/components/ui/section'
-import { SpotlightCard } from '@/components/ui/spotlight-card'
-import { ContextBadge, PulseDot, StatusBadge } from '@/components/ui/status-badge'
+import { Section } from '@/components/ui/section'
+import { ContextBadge, StatusBadge } from '@/components/ui/status-badge'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 // Hidden design-system reference (PRD §9). Sample copy here is not site content.
@@ -15,112 +13,85 @@ export const metadata: Metadata = {
 }
 
 const swatches = [
-  ['background', 'bg-background'],
-  ['foreground', 'bg-foreground'],
-  ['card', 'bg-card'],
-  ['muted', 'bg-muted'],
-  ['muted-foreground', 'bg-muted-foreground'],
-  ['primary', 'bg-primary'],
-  ['border', 'bg-border'],
-  ['ring', 'bg-ring'],
+  ['Paper', 'bg-background'],
+  ['Ink', 'bg-foreground'],
+  ['Muted text', 'bg-muted-foreground'],
+  ['Rule', 'bg-border'],
+  ['Backwater', 'bg-primary'],
+  ['Wash', 'bg-secondary'],
 ] as const
 
-const buttonVariants = ['default', 'secondary', 'outline', 'ghost', 'link'] as const
+const buttonVariants = ['default', 'outline', 'ghost', 'link'] as const
 
 const statuses = ['live', 'in-progress', 'paused', 'archived'] as const
 
 export default function StyleguidePage() {
   return (
     <>
-      <header className="container-page flex items-center justify-between py-6">
-        <span className="font-mono text-sm text-muted-foreground">styleguide</span>
+      <div className="container-page flex items-center justify-between pt-12 pb-8">
+        <h1>Styleguide</h1>
         <ThemeToggle />
-      </header>
+      </div>
 
-      <Section label="typography" className="bg-dot-grid">
-        <h1>Hi, I build things.</h1>
-        <h2 className="mt-6">Section heading</h2>
-        <h3 className="mt-4">Card heading</h3>
-        <p className="mt-4 max-w-[70ch] text-muted-foreground">
-          Body text is Geist Sans at 16 to 17px with a 1.6 line height, kept under 70 characters
-          wide. Headings scale fluidly with clamp().
+      <Section id="type" title="Type">
+        <p className="text-sm text-muted-foreground">Schibsted Grotesk, one family throughout.</p>
+        <p className="mt-6 max-w-[20ch] text-[clamp(2rem,1.35rem+2.8vw,3.25rem)] leading-[1.12] font-medium tracking-[-0.025em]">
+          The hero statement is the one large element.
         </p>
-        <p className="mt-2 font-mono text-sm">Geist Mono for labels, tags and code.</p>
+        <h3 className="mt-8">Item title, 18px semibold</h3>
+        <p className="mt-2 max-w-[62ch]">
+          Body text is 16 to 17px with a 1.65 line height, kept under about 65 characters per line.
+          Section titles sit quietly in the left margin, like headings on a well-set CV.
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">Secondary text, 14px, muted.</p>
       </Section>
 
-      <Section label="colours">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <Section id="colour" title="Colour">
+        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {swatches.map(([name, className]) => (
-            <div key={name}>
-              <div className={`h-16 rounded-lg border ${className}`} />
-              <p className="mt-2 font-mono text-xs text-muted-foreground">{name}</p>
-            </div>
+            <li key={name}>
+              <div className={`h-14 rounded-md border ${className}`} />
+              <p className="mt-2 text-sm text-muted-foreground">{name}</p>
+            </li>
           ))}
-        </div>
+        </ul>
       </Section>
 
-      <Section label="buttons">
+      <Section id="buttons" title="Buttons">
         <div className="flex flex-wrap items-center gap-3">
           {buttonVariants.map((variant) => (
             <Button key={variant} variant={variant}>
               {variant}
             </Button>
           ))}
-          <Button size="lg">Large button</Button>
-          <Button size="sm" variant="outline">
-            Small button
-          </Button>
+          <Button size="lg">Large</Button>
           <Button disabled>Disabled</Button>
         </div>
       </Section>
 
-      <Section label="badges">
+      <Section id="tags" title="Tags">
         <div className="flex flex-wrap items-center gap-3">
+          <ContextBadge context="professional" />
+          <ContextBadge context="personal" />
           {statuses.map((status) => (
             <StatusBadge key={status} status={status} />
           ))}
-          <ContextBadge context="professional" />
-          <ContextBadge context="personal" />
-          <Badge variant="outline" className="font-mono">
-            Next.js
-          </Badge>
-          <span className="inline-flex items-center gap-2 text-sm">
-            <PulseDot /> Availability dot
-          </span>
+        </div>
+        <div className="mt-6">
+          <AvailabilityBadge
+            availability={{ isOpen: true, text: 'Open to roles: remote or on-site' }}
+          />
         </div>
       </Section>
 
-      <Section label="cards">
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Card</CardTitle>
-              <CardDescription>12px radius, 1px low-contrast border.</CardDescription>
-            </CardHeader>
-            <CardContent className="flex gap-2">
-              <ContextBadge context="personal" />
-              <StatusBadge status="live" />
-            </CardContent>
-          </Card>
-          <SpotlightCard>
-            <CardHeader>
-              <CardTitle>Spotlight card</CardTitle>
-              <CardDescription>
-                Move a mouse over it: a soft glow follows the cursor and a shadow appears.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex gap-2">
-              <ContextBadge context="professional" />
-              <StatusBadge status="in-progress" />
-            </CardContent>
-          </SpotlightCard>
-        </div>
-      </Section>
-
-      <Section>
-        <SectionLabel>section label</SectionLabel>
-        <p className="text-muted-foreground">
-          Sections use 64px padding on mobile, 96px on desktop.
+      <Section id="links" title="Links">
+        <p className="max-w-[62ch]">
+          Inline links use the accent:{' '}
+          <a href="#links" className="text-primary hover:underline">
+            a sample link
+          </a>
+          . The accent is reserved for links, the primary button, focus rings and the availability
+          dot.
         </p>
       </Section>
     </>

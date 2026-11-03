@@ -45,6 +45,24 @@ async function fillGlobalIfEmpty<S extends GlobalSlug>(
   payload.logger.info(`seed: ${slug} filled`)
 }
 
+// NFR-36: create the admin from env on first run, with a strong password.
+const { totalDocs: userCount } = await payload.count({ collection: 'users' })
+const adminEmail = process.env.ADMIN_EMAIL
+const adminPassword = process.env.ADMIN_PASSWORD
+if (userCount === 0 && adminEmail && adminPassword) {
+  if (adminPassword.length < 12 || adminPassword === 'change-me') {
+    throw new Error('ADMIN_PASSWORD must be at least 12 characters and not the example value.')
+  }
+  await payload.create({
+    collection: 'users',
+    data: { email: adminEmail, password: adminPassword },
+    context,
+  })
+  payload.logger.info('seed: admin user created')
+} else {
+  payload.logger.info('seed: admin user exists or ADMIN_EMAIL/ADMIN_PASSWORD not set, skipped')
+}
+
 const locations = ['Remote', 'Kerala', 'Bengaluru', 'Chennai', 'Dubai']
 
 await fillGlobalIfEmpty(
