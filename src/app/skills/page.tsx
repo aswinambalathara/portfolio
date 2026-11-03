@@ -27,15 +27,18 @@ export default function SkillsPage() {
               {group.title}
             </h2>
             <ul className="mt-8 flex flex-wrap justify-center gap-4 sm:gap-6">
-              {group.skills.map((skill) => (
+              {group.skills.map((skill, i) => (
                 <li
                   key={skill.name}
-                  className="group flex size-32 flex-col items-center justify-center gap-4 rounded-2xl border border-line bg-linear-to-br from-surface to-bg/40 transition-all duration-200 hover:-translate-y-1 hover:border-accent/50 hover:shadow-lg hover:shadow-accent-strong/10 sm:size-36"
+                  data-reveal
+                  style={{ '--reveal-delay': `${i * 60}ms` } as React.CSSProperties}
                 >
-                  <SkillLogo skill={skill} className="size-12" />
-                  <span className="px-2 text-center font-mono text-sm font-medium">
-                    {skill.name}
-                  </span>
+                  <div className="group flex size-32 flex-col items-center justify-center gap-4 rounded-2xl border border-line bg-linear-to-br from-surface to-bg/40 transition-all duration-200 hover:-translate-y-1 hover:border-accent/50 hover:shadow-lg hover:shadow-accent-strong/10 sm:size-36">
+                    <SkillLogo skill={skill} className="size-12" />
+                    <span className="px-2 text-center font-mono text-sm font-medium">
+                      {skill.name}
+                    </span>
+                  </div>
                 </li>
               ))}
             </ul>

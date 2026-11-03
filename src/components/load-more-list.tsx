@@ -37,8 +37,8 @@ export function LoadMoreList({
         {items.slice(0, count).map((item, index) => (
           <li
             key={index}
-            className="animate-rise"
-            style={{ animationDelay: `${(index % batch) * 60}ms` }}
+            data-reveal
+            style={{ '--reveal-delay': `${(index % 4) * 80}ms` } as React.CSSProperties}
           >
             {item}
           </li>

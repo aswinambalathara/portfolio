@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 
 import { Nav } from '@/components/nav'
 import { Particles } from '@/components/particles'
+import { ScrollReveal } from '@/components/scroll-reveal'
 import { SiteFooter } from '@/components/site-footer'
 import { site } from '@/content/site'
 import './globals.css'
@@ -45,6 +46,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-20 bg-dots" />
         <div aria-hidden className="pointer-events-none fixed inset-0 -z-20 bg-glow" />
         <Particles />
+        <ScrollReveal />
         <Nav />
         <main id="main" className="flex-1">
           {children}
