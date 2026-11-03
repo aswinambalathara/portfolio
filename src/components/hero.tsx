@@ -1,4 +1,5 @@
-import { ArrowDown, FileText, Mail } from 'lucide-react'
+import { FileText, FolderGit2, Mail } from 'lucide-react'
+import Link from 'next/link'
 
 import { BrandIcon } from '@/components/brand-icon'
 import { site } from '@/content/site'
@@ -9,29 +10,31 @@ const initials = site.name
   .map((part) => part[0])
   .join('')
 
+const secondary =
+  'inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-5 py-2.5 text-sm font-medium transition-colors hover:border-accent/60 hover:text-accent'
+
 export function Hero() {
   const socials = site.socials.filter((social) => social.href)
 
   return (
     <section
-      id="home"
       aria-label="Introduction"
-      className="flex min-h-svh scroll-mt-24 flex-col items-center justify-center px-5 pt-24 pb-16 text-center"
+      className="flex min-h-[calc(100svh-5rem)] flex-col items-center justify-center px-5 pt-28 pb-16 text-center"
     >
       <div className="relative animate-rise">
         <div className="absolute -inset-6 rounded-full bg-accent-strong/25 blur-3xl" aria-hidden />
-        <div className="relative rounded-full bg-gradient-to-br from-accent via-accent-strong to-cyan p-[3px]">
+        <div className="relative rounded-full bg-linear-to-br from-amber-200 via-amber-400 to-orange-500 p-[3px]">
           {site.avatarUrl ? (
             // eslint-disable-next-line @next/next/no-img-element -- static export, no image optimisation
             <img
               src={site.avatarUrl}
               alt={site.name}
-              width={144}
-              height={144}
-              className="size-32 rounded-full object-cover sm:size-36"
+              width={208}
+              height={208}
+              className="size-40 rounded-full object-cover sm:size-52"
             />
           ) : (
-            <div className="grid size-32 place-items-center rounded-full bg-surface font-mono text-4xl font-semibold text-fg sm:size-36">
+            <div className="grid size-40 place-items-center rounded-full bg-surface font-mono text-4xl font-semibold text-fg sm:size-52">
               {initials}
             </div>
           )}
@@ -48,7 +51,7 @@ export function Hero() {
 
       <h1 className="mt-5 text-4xl font-semibold tracking-tight sm:text-6xl">
         Hi, I&apos;m{' '}
-        <span className="bg-gradient-to-r from-accent to-cyan bg-clip-text text-transparent">
+        <span className="bg-linear-to-r from-accent to-cyan bg-clip-text text-transparent">
           {site.firstName}
         </span>
       </h1>
@@ -66,13 +69,14 @@ export function Hero() {
             View résumé
           </a>
         )}
-        <a
-          href="#contact"
-          className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-5 py-2.5 text-sm font-medium transition-colors hover:border-accent/60 hover:text-accent"
-        >
+        <Link href="/projects" className={secondary}>
+          <FolderGit2 className="size-4" aria-hidden />
+          See my work
+        </Link>
+        <Link href="/contact" className={secondary}>
           <Mail className="size-4" aria-hidden />
           Contact me
-        </a>
+        </Link>
       </div>
 
       {socials.length > 0 && (
@@ -91,14 +95,6 @@ export function Hero() {
           ))}
         </ul>
       )}
-
-      <a
-        href="#skills"
-        aria-label="Scroll to skills"
-        className="mt-14 hidden rounded-full p-2 text-muted transition-colors hover:text-fg sm:block"
-      >
-        <ArrowDown className="size-5" aria-hidden />
-      </a>
     </section>
   )
 }

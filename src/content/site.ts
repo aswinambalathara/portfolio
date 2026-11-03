@@ -1,18 +1,32 @@
 // All site content lives here for now. When the CMS is added, this file is what gets replaced.
 // TODO markers show values that still need real details before launch.
 
-export type Link = { label: string; href: string }
-
 export type Social = { platform: 'github' | 'linkedin'; href: string }
 
-export type SkillGroup = { title: string; skills: { name: string; icon?: string }[] }
+// `brand` is a Simple Icons slug (shown in the brand colour); `ui` is a generic icon for skills
+// without a logo.
+export type Skill = {
+  name: string
+  brand?: string
+  ui?: 'api' | 'llm' | 'agent' | 'state' | 'queue'
+}
+
+export type SkillGroup = { title: string; skills: Skill[] }
 
 export type Project = {
+  slug: string
   title: string
-  description: string
+  summary: string
   context: 'work' | 'personal'
-  status: 'live' | 'in-progress'
+  status: 'live' | 'in-progress' | 'completed'
+  role: string
+  timeline: string
   tech: string[]
+  overview: string
+  problem: string
+  features: string[]
+  challenges: string
+  outcome: string
   // Work projects under NDA: links are never shown.
   confidential?: boolean
   repoUrl?: string
@@ -29,92 +43,174 @@ export const site = {
   availability: 'Open to roles · Remote, Kerala, Bengaluru, Chennai, Dubai',
   url: 'https://portfolio.aswin-ambalathara.space',
 
-  // TODO: real email address.
-  email: 'hello@example.com',
+  email: 'aswinnairtm@gmail.com',
+  // TODO: free Web3Forms access key (web3forms.com). It is public by design. While empty, the
+  // contact form opens the visitor's email app instead.
+  formAccessKey: '',
   // TODO: put the résumé at public/resume.pdf, then set this to '/resume.pdf'. Empty hides the buttons.
   resumeUrl: '',
-  // TODO: put a square photo at public/avatar.jpg, then set this to '/avatar.jpg'. Empty shows initials.
-  avatarUrl: '',
-  // TODO: real profile URLs. Entries with an empty href are hidden.
+  avatarUrl: '/avatar.jpg',
+  // TODO: LinkedIn URL. Entries with an empty href are hidden.
   socials: [
-    { platform: 'github', href: '' },
+    { platform: 'github', href: 'https://github.com/aswinambalathara' },
     { platform: 'linkedin', href: '' },
   ] satisfies Social[] as Social[],
 }
 
 export const skillGroups: SkillGroup[] = [
   {
-    title: 'Frontend',
+    title: 'Programming Languages',
     skills: [
-      { name: 'React', icon: 'react' },
-      { name: 'Next.js', icon: 'nextdotjs' },
-      { name: 'TypeScript', icon: 'typescript' },
-      { name: 'JavaScript', icon: 'javascript' },
-      { name: 'Tailwind CSS', icon: 'tailwindcss' },
+      { name: 'JavaScript', brand: 'javascript' },
+      { name: 'TypeScript', brand: 'typescript' },
+      { name: 'Python', brand: 'python' },
     ],
   },
   {
-    title: 'Backend',
+    title: 'Frontend Development',
     skills: [
-      { name: 'Node.js', icon: 'nodedotjs' },
-      { name: 'Express', icon: 'express' },
-      { name: 'REST APIs' },
+      { name: 'React', brand: 'react' },
+      { name: 'Next.js', brand: 'nextdotjs' },
+      { name: 'Tailwind CSS', brand: 'tailwindcss' },
+      { name: 'Redux', brand: 'redux' },
+      { name: 'Zustand', ui: 'state' },
+    ],
+  },
+  {
+    title: 'Backend Development',
+    skills: [
+      { name: 'Node.js', brand: 'nodedotjs' },
+      { name: 'Express', brand: 'express' },
+      { name: 'FastAPI', brand: 'fastapi' },
+      { name: 'REST APIs', ui: 'api' },
+      { name: 'BullMQ', ui: 'queue' },
+      { name: 'Razorpay', brand: 'razorpay' },
     ],
   },
   {
     title: 'AI & Agents',
     skills: [
-      { name: 'Python', icon: 'python' },
-      { name: 'LLM APIs' },
-      { name: 'Agentic workflows' },
+      { name: 'LLM APIs', ui: 'llm' },
+      { name: 'Agentic Workflows', ui: 'agent' },
+      { name: 'LangChain', brand: 'langchain' },
+      { name: 'LangGraph', brand: 'langgraph' },
+      { name: 'MCP', brand: 'modelcontextprotocol' },
     ],
   },
   {
     title: 'Databases',
-    skills: [{ name: 'MongoDB', icon: 'mongodb' }],
+    skills: [
+      { name: 'MongoDB', brand: 'mongodb' },
+      { name: 'Redis', brand: 'redis' },
+    ],
   },
   {
     title: 'DevOps & Tools',
     skills: [
-      { name: 'Docker', icon: 'docker' },
-      { name: 'Git', icon: 'git' },
-      { name: 'GitHub Actions', icon: 'githubactions' },
-      { name: 'Linux', icon: 'linux' },
+      { name: 'Docker', brand: 'docker' },
+      { name: 'Git', brand: 'git' },
+      { name: 'GitHub Actions', brand: 'githubactions' },
+      { name: 'Linux', brand: 'linux' },
+      { name: 'Figma', brand: 'figma' },
+      { name: 'Cursor', brand: 'cursor' },
+      { name: 'Claude Code', brand: 'claude' },
     ],
   },
 ]
 
-// TODO: replace these sample projects with real ones.
+// Projects from github.com/aswinambalathara, newest first. Tethr is the current project.
 export const projects: Project[] = [
   {
-    title: 'AI Agent Workflow Platform',
-    description:
-      'Sample project: an internal AI agent that automates a multi-step business workflow with tool calling and LLMs.',
-    context: 'work',
-    status: 'live',
-    tech: ['Python', 'LLM APIs', 'Agentic workflows'],
-    confidential: true,
-  },
-  {
-    title: 'Full-Stack Web App',
-    description:
-      'Sample project: a MERN application built end to end, from API design to deployment.',
+    slug: 'tethr',
+    title: 'Tethr',
+    summary:
+      'A developer contribution ledger that logs work from your AI coding IDE over MCP and syncs daily tables, weekly summaries and monthly appraisal dossiers to Google Docs.',
     context: 'personal',
     status: 'live',
-    tech: ['React', 'Node.js', 'Express', 'MongoDB'],
+    role: 'Solo developer: product, frontend, backend and MCP server',
+    timeline: 'Sep 2026 – present',
+    tech: [
+      'Next.js',
+      'TypeScript',
+      'FastAPI',
+      'Python',
+      'MongoDB',
+      'MCP',
+      'Gemini',
+      'Clerk',
+      'Google Docs API',
+    ],
+    overview:
+      'Tethr records every contribution as Contribution → Outcome → Evidence: what you did, the impact it had, and proof such as a PR, commit or ticket. Entries come straight from AI coding IDEs (Cursor, Claude Code, Antigravity, Windsurf) through the Model Context Protocol, or from a web dashboard, and are written to a connected Google Doc.',
+    problem:
+      'Before a performance review, developers dig through months of git history, closed PRs and chat threads to remember what they shipped and why it mattered. A vague work diary does not hold up, and nobody keeps one by hand.',
+    features: [
+      'FastMCP server with add_task, update_task, get_tasks and sync_docs tools, so the IDE assistant logs work from the code it just changed',
+      'Three-tier Google Docs ledger: a 10-column daily contribution table, Saturday weekly summaries and month-end appraisal dossiers',
+      'Gemini 2.0 Flash writes weekly and monthly summaries, with a template fallback that works offline or without an API key',
+      'Custom MCP sign-in screen with silent Clerk session checks, loopback redirect and a copy-code fallback for IDEs',
+      'Configurable sync cadence (real-time, end of day or weekly) with a cap on manual summary syncs',
+      'Dashboard with impact table, Kanban view and starred career highlights for promotion packets',
+    ],
+    challenges:
+      'Designing an OAuth-style authorization flow that works inside IDE MCP clients, with a loopback redirect and a manual-code fallback; verifying Clerk JWTs (RS256) in FastAPI; encrypting stored Google tokens with AES-256-GCM; and formatting structured tables reliably through the Google Docs batchUpdate API.',
+    outcome:
+      'Live, with the MCP tools, Google Docs sync and AI-written summaries running across a Next.js frontend and a FastAPI backend. New features are being added.',
+    repoUrl: 'https://github.com/aswinambalathara/Tethr',
+    liveUrl: 'https://tethr.aswin-ambalathara.space',
   },
   {
-    title: 'Agentic Chatbot',
-    description: 'Sample project: a chatbot that uses tools to answer questions and take actions.',
+    slug: 'meet-grid',
+    title: 'Meet Grid',
+    summary:
+      'An event management platform with separate user and admin apps, built on a layered TypeScript backend.',
     context: 'personal',
     status: 'in-progress',
-    tech: ['Next.js', 'TypeScript', 'LLM APIs'],
+    role: 'Solo developer: frontend and backend',
+    timeline: 'Oct 2024 – present',
+    tech: ['Next.js', 'TypeScript', 'Express', 'Node.js', 'MongoDB', 'Redux', 'Tailwind CSS'],
+    overview:
+      'Meet Grid lets people discover and manage events, while admins manage users and event categories. The Next.js frontend talks to an Express and TypeScript API organised with the repository pattern.',
+    problem:
+      'Event apps mix user, admin and data-access logic quickly. The goal was a clean, layered backend that stays easy to extend as features grow.',
+    features: [
+      'User and admin areas with separate authentication and routes',
+      'Sign-in with email or Google (Passport OAuth 2.0), with JWT cookies',
+      'Event categories, event listings and user management for admins',
+      'Location search and maps with Mapbox, and image upload and cropping with Cloudinary',
+      'Forms validated with React Hook Form and Zod on the client and Joi on the server',
+    ],
+    challenges:
+      'Keeping the backend layered (routes, controllers, services, repositories) so business logic never talks to Mongoose directly, and sharing typed interfaces between the API and the Next.js app.',
+    outcome:
+      'The user and admin foundations are built: authentication, event categories, listings and user management on a layered backend. The remaining features are next.',
+    repoUrl: 'https://github.com/aswinambalathara/Meet_Grid',
   },
   {
-    title: 'Workflow Automation Agents',
-    description: 'Sample project: a set of cooperating agents that automate a repetitive task.',
+    slug: 'holahaute',
+    title: 'Holahaute',
+    summary:
+      'A full e-commerce store with a customer shop, admin dashboard, Razorpay payments and sales reports.',
     context: 'personal',
-    status: 'in-progress',
-    tech: ['Python', 'Agentic workflows'],
+    status: 'completed',
+    role: 'Solo developer: full stack',
+    timeline: 'Feb 2024 – Mar 2025',
+    tech: ['Node.js', 'Express', 'MongoDB', 'EJS', 'Razorpay', 'JavaScript'],
+    overview:
+      'Holahaute is a server-rendered online store built with Express, MongoDB and EJS. Customers browse, add to cart or wishlist and pay online; admins manage the catalogue, offers and orders from a dashboard.',
+    problem:
+      'A real shop needs much more than a product list: accounts, carts, offers, payments, order tracking and reporting for the owner.',
+    features: [
+      'Product, category, banner, offer and coupon management in an admin dashboard',
+      'Cart, wishlist, wallet, addresses, ratings and order history for customers',
+      'Online payments with Razorpay',
+      'Email OTP verification and Google sign-in',
+      'Sales reports exported to Excel and PDF, and image cropping for product photos',
+    ],
+    challenges:
+      'Keeping cart totals, coupons, offers and wallet balances consistent through checkout and payment, and generating downloadable sales reports on the server.',
+    outcome:
+      'Completed, covering the full shop and admin workflow from browsing to payment and reporting.',
+    repoUrl: 'https://github.com/aswinambalathara/Holahaute',
   },
 ]
