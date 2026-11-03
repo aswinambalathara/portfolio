@@ -28,7 +28,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+    // data-scroll-behavior lets Next.js turn smooth scrolling off during page changes, so a new
+    // page starts at the top instead of animating there.
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable}`}
+      data-scroll-behavior="smooth"
+    >
       <body className="flex min-h-svh flex-col">
         <a
           href="#main"
