@@ -1,23 +1,68 @@
 'use client'
 
-import { Check, Copy, RotateCcw, Send } from 'lucide-react'
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { RotateCcw, Send } from 'lucide-react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 
 import { site } from '@/content/site'
 
-type Step = 'topic' | 'name' | 'email' | 'message' | 'done'
 type Message = { from: 'bot' | 'visitor'; text: string }
 
-const topics = ['A job opportunity', 'A freelance project', 'Just saying hi']
+const starters = ["What's his tech stack?", 'What has he built?', "I'd like to hire him"]
 
 const greeting: Message[] = [
-  { from: 'bot', text: `Hi, I'm ${site.firstName} 👋` },
-  { from: 'bot', text: 'Thanks for stopping by. What would you like to talk about?' },
+  { from: 'bot', text: `Hi, I'm ${site.firstName}'s AI assistant 👋` },
+  {
+    from: 'bot',
+    text: `Ask me about ${site.firstName}'s skills, projects or experience, or leave him a message.`,
+  },
 ]
 
-const prompts = { name: 'Your name', email: 'you@company.com', message: 'Write your message…' }
+function newSessionId() {
+  return typeof crypto !== 'undefined' && 'randomUUID' in crypto
+    ? crypto.randomUUID()
+    : `web-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`
+}
 
-const isEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+// **bold** spans inside a line. Built as React nodes, never as HTML.
+function inline(text: string) {
+  return text.split(/(\*\*[^*]+\*\*)/g).map((part, index) =>
+    part.length > 4 && part.startsWith('**') && part.endsWith('**') ? (
+      <strong key={index} className="font-semibold text-fg">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      part
+    ),
+  )
+}
+
+// The assistant's small formatting set: paragraphs, "- " bullet lines and **bold**.
+function BotText({ text }: { text: string }) {
+  const blocks: ReactNode[] = []
+  let items: string[] = []
+  const flushList = () => {
+    if (!items.length) return
+    blocks.push(
+      <ul key={blocks.length} className="list-disc space-y-1 pl-4 marker:text-accent">
+        {items.map((item, index) => (
+          <li key={index}>{inline(item)}</li>
+        ))}
+      </ul>,
+    )
+    items = []
+  }
+  for (const line of text.split('\n').map((value) => value.trim())) {
+    const bullet = line.match(/^(?:[-•]|\*(?!\*)|\d+[.)])\s+(.*)$/)
+    if (bullet) {
+      items.push(bullet[1])
+    } else {
+      flushList()
+      if (line) blocks.push(<p key={blocks.length}>{inline(line)}</p>)
+    }
+  }
+  flushList()
+  return <div className="space-y-2">{blocks}</div>
+}
 
 function Avatar({ size = 'size-8' }: { size?: string }) {
   return site.avatarUrl ? (
@@ -32,118 +77,77 @@ function Avatar({ size = 'size-8' }: { size?: string }) {
   )
 }
 
-// The whole Contact page: a guided chat that composes a message. With a Web3Forms access key it
-// sends straight to the inbox; without one, "Send via email" opens the visitor's email app.
+// The whole Contact page: a chat with the AI assistant (n8n workflow at `site.chatUrl`). It answers
+// from the résumé and passes contact requests on to Aswin. One session per visit or "Start over".
 export function ContactChat() {
-  const [step, setStep] = useState<Step>('topic')
   const [messages, setMessages] = useState<Message[]>(greeting)
   const [typing, setTyping] = useState(false)
   const [input, setInput] = useState('')
   const [error, setError] = useState('')
-  const [copied, setCopied] = useState(false)
-  const [delivery, setDelivery] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
-  const [answers, setAnswers] = useState({ topic: '', name: '', email: '', message: '' })
+  const [failed, setFailed] = useState('')
   const logRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement & HTMLTextAreaElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const sessionRef = useRef<string | null>(null)
 
   // Keep the newest message in view without scrolling the whole page.
   useEffect(() => {
     const log = logRef.current
     if (log) log.scrollTop = log.scrollHeight
-  }, [messages, typing, step, delivery])
+  }, [messages, typing, failed])
 
+  const started = messages.length > greeting.length
+
+  // After each answer, put the cursor back in the input (not on first load: no keyboard pop-up).
   useEffect(() => {
-    if (!typing && (step === 'name' || step === 'email' || step === 'message')) {
-      inputRef.current?.focus()
-    }
-  }, [step, typing])
+    if (started && !typing) inputRef.current?.focus()
+  }, [started, typing])
 
-  function botSays(text: string, next?: Step) {
+  async function request(text: string) {
+    sessionRef.current ??= newSessionId()
+    const session = sessionRef.current
+    setFailed('')
     setTyping(true)
-    setTimeout(() => {
-      setMessages((current) => [...current, { from: 'bot', text }])
-      setTyping(false)
-      if (next) setStep(next)
-    }, 700)
+    try {
+      const response = await fetch(site.chatUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, sessionId: session }),
+        signal: AbortSignal.timeout(30_000),
+      })
+      const result = (await response.json()) as { reply?: string }
+      if (!response.ok || !result.reply) throw new Error('No reply')
+      // Ignore a late answer if the visitor started over meanwhile.
+      if (sessionRef.current !== session) return
+      setMessages((current) => [...current, { from: 'bot', text: result.reply as string }])
+    } catch {
+      if (sessionRef.current === session) setFailed(text)
+    } finally {
+      if (sessionRef.current === session) setTyping(false)
+    }
   }
 
-  function reply(visitorText: string, botText: string, next: Step) {
-    setMessages((current) => [...current, { from: 'visitor', text: visitorText }])
-    botSays(botText, next)
-  }
-
-  function chooseTopic(topic: string) {
-    setAnswers((current) => ({ ...current, topic }))
-    reply(topic, "Great! What's your name?", 'name')
+  function ask(text: string) {
+    setMessages((current) => [...current, { from: 'visitor', text }])
+    setInput('')
+    setError('')
+    void request(text)
   }
 
   function submit(event: FormEvent) {
     event.preventDefault()
     const value = input.trim()
-
-    if (step === 'name') {
-      if (!value) return setError('Please enter your name.')
-      setAnswers((current) => ({ ...current, name: value }))
-      reply(value, `Nice to meet you, ${value}. What's the best email to reach you?`, 'email')
-    } else if (step === 'email') {
-      if (!isEmail(value)) return setError('That email doesn’t look right. Please check it.')
-      setAnswers((current) => ({ ...current, email: value }))
-      reply(value, 'Thanks! What would you like to tell me?', 'message')
-    } else if (step === 'message') {
-      if (value.length < 10) return setError('Please write at least a sentence.')
-      setAnswers((current) => ({ ...current, message: value }))
-      reply(value, "Here's your message. Take a look and send it when you're ready.", 'done')
-    }
-    setInput('')
-    setError('')
+    if (!value) return setError('Please type a message.')
+    ask(value)
   }
 
   function restart() {
+    sessionRef.current = null
     setMessages(greeting)
-    setAnswers({ topic: '', name: '', email: '', message: '' })
-    setStep('topic')
     setInput('')
     setError('')
-    setDelivery('idle')
+    setFailed('')
     setTyping(false)
   }
-
-  const subject = `${answers.topic} — from ${answers.name}`
-  const body = `${answers.message}\n\n${answers.name}\n${answers.email}`
-  const mailto = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-
-  async function copy() {
-    await navigator.clipboard.writeText(`To: ${site.email}\nSubject: ${subject}\n\n${body}`)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  async function send() {
-    setDelivery('sending')
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          access_key: site.formAccessKey,
-          subject: `Portfolio: ${subject}`,
-          from_name: 'Portfolio contact chat',
-          name: answers.name,
-          email: answers.email,
-          topic: answers.topic,
-          message: answers.message,
-        }),
-      })
-      const result = (await response.json()) as { success?: boolean }
-      if (!result.success) throw new Error('Not sent')
-      setDelivery('sent')
-      botSays(`Sent! I'll get back to you at ${answers.email} soon.`)
-    } catch {
-      setDelivery('error')
-    }
-  }
-
-  const showComposer = step === 'name' || step === 'email' || step === 'message'
 
   return (
     <div className="relative mx-auto w-full max-w-2xl">
@@ -160,7 +164,7 @@ export function ContactChat() {
           <div className="min-w-0 flex-1">
             <p className="truncate font-semibold">{site.name}</p>
             <p className="truncate text-xs text-muted">
-              <span className="text-online">Online</span> · usually replies by email
+              <span className="text-online">Online</span> · AI assistant, replies instantly
             </p>
           </div>
           <button
@@ -177,7 +181,7 @@ export function ContactChat() {
           ref={logRef}
           role="log"
           aria-live="polite"
-          className="flex-1 space-y-2 overflow-y-auto px-4 py-6 sm:px-6"
+          className="scrollbar-thin flex-1 space-y-2 overflow-y-auto px-4 py-6 sm:px-6"
         >
           <p className="pb-2 text-center font-mono text-[11px] tracking-wide text-muted">Today</p>
 
@@ -191,9 +195,9 @@ export function ContactChat() {
                 <span className={firstInGroup ? '' : 'invisible'}>
                   <Avatar size="size-7" />
                 </span>
-                <p className="max-w-[80%] rounded-2xl rounded-bl-md border border-line bg-bg/70 px-4 py-2.5 text-sm leading-relaxed">
-                  {message.text}
-                </p>
+                <div className="max-w-[80%] rounded-2xl rounded-bl-md border border-line bg-bg/70 px-4 py-2.5 text-sm leading-relaxed">
+                  <BotText text={message.text} />
+                </div>
               </div>
             ) : (
               <div
@@ -222,99 +226,33 @@ export function ContactChat() {
             </div>
           )}
 
-          {step === 'topic' && !typing && (
+          {!started && !typing && (
             <div className="flex animate-rise flex-wrap gap-2 pt-3 pl-9">
-              {topics.map((topic) => (
+              {starters.map((starter) => (
                 <button
-                  key={topic}
+                  key={starter}
                   type="button"
-                  onClick={() => chooseTopic(topic)}
+                  onClick={() => ask(starter)}
                   className="rounded-full border border-accent/40 bg-accent/5 px-4 py-2 text-sm text-accent transition-colors hover:bg-accent hover:text-bg"
                 >
-                  {topic}
+                  {starter}
                 </button>
               ))}
             </div>
           )}
 
-          {step === 'done' && !typing && delivery !== 'sent' && (
-            <div className="animate-rise pt-3 pl-9">
-              <div className="overflow-hidden rounded-2xl border border-line bg-bg/60">
-                <dl className="divide-y divide-line text-sm">
-                  <div className="flex gap-3 px-4 py-2.5">
-                    <dt className="w-16 shrink-0 text-muted">To</dt>
-                    <dd className="truncate">{site.email}</dd>
-                  </div>
-                  <div className="flex gap-3 px-4 py-2.5">
-                    <dt className="w-16 shrink-0 text-muted">Subject</dt>
-                    <dd className="truncate">{subject}</dd>
-                  </div>
-                  <div className="px-4 py-3">
-                    <dt className="sr-only">Message</dt>
-                    <dd className="line-clamp-4 whitespace-pre-line text-fg/90">
-                      {answers.message}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
-
-              {delivery === 'error' && (
-                <p role="alert" className="mt-3 text-sm text-red-400">
-                  That didn&apos;t send. Try again, or{' '}
-                  <a href={mailto} className="underline">
-                    email me directly
-                  </a>
-                  .
-                </p>
-              )}
-
-              <div className="mt-3 flex flex-wrap gap-2">
-                {site.formAccessKey ? (
-                  <button
-                    type="button"
-                    onClick={send}
-                    disabled={delivery === 'sending'}
-                    className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:bg-fg disabled:opacity-60"
-                  >
-                    <Send aria-hidden className="size-4" />
-                    {delivery === 'sending' ? 'Sending…' : 'Send message'}
-                  </button>
-                ) : (
-                  <a
-                    href={mailto}
-                    className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-bg transition-colors hover:bg-fg"
-                  >
-                    <Send aria-hidden className="size-4" />
-                    Send via email
-                  </a>
-                )}
-                <button
-                  type="button"
-                  onClick={copy}
-                  className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2.5 text-sm transition-colors hover:border-accent/60 hover:text-accent"
-                >
-                  {copied ? (
-                    <Check aria-hidden className="size-4 text-online" />
-                  ) : (
-                    <Copy aria-hidden className="size-4" />
-                  )}
-                  {copied ? 'Copied' : 'Copy'}
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === 'done' && delivery === 'sent' && !typing && (
-            <div className="animate-rise pt-3 pl-9">
-              <button
-                type="button"
-                onClick={restart}
-                className="inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-sm text-muted transition-colors hover:text-fg"
-              >
-                <RotateCcw aria-hidden className="size-4" />
-                Send another message
+          {failed && !typing && (
+            <p role="alert" className="animate-rise pt-3 pl-9 text-sm text-red-400">
+              That didn&apos;t send.{' '}
+              <button type="button" onClick={() => request(failed)} className="underline">
+                Try again
               </button>
-            </div>
+              , or{' '}
+              <a href={`mailto:${site.email}`} className="underline">
+                email me directly
+              </a>
+              .
+            </p>
           )}
         </div>
 
@@ -326,55 +264,31 @@ export function ContactChat() {
           )}
           <div className="flex items-end gap-2 rounded-3xl border border-line bg-bg/70 p-1.5 pl-4 transition-colors focus-within:border-accent/60">
             <label htmlFor="chat-input" className="sr-only">
-              {showComposer ? prompts[step] : 'Message'}
+              Message
             </label>
-            {step === 'message' ? (
-              <textarea
-                id="chat-input"
-                ref={inputRef}
-                value={input}
-                onChange={(event) => setInput(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' && !event.shiftKey) submit(event)
-                }}
-                rows={2}
-                maxLength={2000}
-                disabled={typing}
-                placeholder={prompts.message}
-                className="max-h-32 flex-1 resize-none bg-transparent py-2 text-sm outline-none placeholder:text-muted"
-              />
-            ) : (
-              <input
-                id="chat-input"
-                ref={inputRef}
-                value={input}
-                onChange={(event) => setInput(event.target.value)}
-                type={step === 'email' ? 'email' : 'text'}
-                autoComplete={step === 'email' ? 'email' : step === 'name' ? 'name' : 'off'}
-                disabled={typing || !showComposer}
-                placeholder={
-                  showComposer
-                    ? prompts[step]
-                    : step === 'topic'
-                      ? 'Pick a topic above to start'
-                      : 'Chat finished'
-                }
-                className="flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-muted disabled:cursor-not-allowed"
-              />
-            )}
+            <input
+              id="chat-input"
+              ref={inputRef}
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              type="text"
+              autoComplete="off"
+              maxLength={1000}
+              disabled={typing}
+              placeholder={`Ask about ${site.firstName}'s work…`}
+              className="flex-1 bg-transparent py-2 text-sm outline-none placeholder:text-muted disabled:cursor-not-allowed"
+            />
             <button
               type="submit"
               aria-label="Send"
-              disabled={typing || !showComposer}
+              disabled={typing}
               className="grid size-10 shrink-0 place-items-center rounded-full bg-accent text-bg transition-colors hover:bg-fg disabled:opacity-40"
             >
               <Send aria-hidden className="size-4" />
             </button>
           </div>
           <p className="pt-2 text-center text-[11px] text-muted">
-            {site.formAccessKey
-              ? 'Messages go straight to my inbox.'
-              : 'Your message opens in your email app, ready to send.'}
+            Answers are AI-generated from my résumé. Messages you leave here reach me directly.
           </p>
         </form>
       </div>

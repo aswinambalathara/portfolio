@@ -44,9 +44,9 @@ export const site = {
   url: 'https://portfolio.aswin-ambalathara.space',
 
   email: 'aswinnairtm@gmail.com',
-  // TODO: free Web3Forms access key (web3forms.com). It is public by design. While empty, the
-  // contact form opens the visitor's email app instead.
-  formAccessKey: '',
+  // The Contact page chat posts here: the n8n "Portfolio AI Chatbot" workflow, which answers from
+  // the résumé and forwards contact requests. Public by design; n8n only allows this site's origins.
+  chatUrl: 'https://n8n.aswin-ambalathara.space/webhook/portfolio-chat',
   // TODO: put the résumé at public/resume.pdf, then set this to '/resume.pdf'. Empty hides the buttons.
   resumeUrl: '',
   avatarUrl: '/avatar.jpg',
