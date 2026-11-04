@@ -13,6 +13,10 @@ export type Skill = {
 
 export type SkillGroup = { title: string; skills: Skill[] }
 
+// A headline stack shown at the top of the Skills page. `skills` are names from `skillGroups`,
+// so the logos match.
+export type CoreStack = { title: string; summary: string; skills: string[] }
+
 export type Project = {
   slug: string
   title: string
@@ -56,6 +60,24 @@ export const site = {
     { platform: 'linkedin', href: '' },
   ] satisfies Social[] as Social[],
 }
+
+export const coreStacks: CoreStack[] = [
+  {
+    title: 'MERN + Next.js',
+    summary: 'Full-stack web apps in TypeScript, from the database to the UI.',
+    skills: ['MongoDB', 'Express', 'React', 'Node.js', 'Next.js', 'TypeScript'],
+  },
+  {
+    title: 'AI Agents',
+    summary: 'Agentic workflows, RAG pipelines and tool-calling LLM apps.',
+    skills: ['Python', 'LangChain', 'LangGraph', 'MCP', 'n8n', 'FastAPI'],
+  },
+  {
+    title: 'Ship & Scale',
+    summary: 'Containers, queues and CI/CD to run it all in production.',
+    skills: ['Docker', 'AWS', 'GitHub Actions', 'Redis', 'BullMQ'],
+  },
+]
 
 export const skillGroups: SkillGroup[] = [
   {
