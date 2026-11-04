@@ -8,7 +8,7 @@ export type Social = { platform: 'github' | 'linkedin'; href: string }
 export type Skill = {
   name: string
   brand?: string
-  ui?: 'api' | 'llm' | 'agent' | 'state' | 'queue'
+  ui?: 'api' | 'llm' | 'agent' | 'state' | 'queue' | 'realtime' | 'trace' | 'database' | 'cloud'
 }
 
 export type SkillGroup = { title: string; skills: Skill[] }
@@ -74,6 +74,8 @@ export const skillGroups: SkillGroup[] = [
       { name: 'Tailwind CSS', brand: 'tailwindcss' },
       { name: 'Redux', brand: 'redux' },
       { name: 'Zustand', ui: 'state' },
+      { name: 'shadcn/ui', brand: 'shadcnui' },
+      { name: 'Material UI', brand: 'mui' },
     ],
   },
   {
@@ -83,7 +85,9 @@ export const skillGroups: SkillGroup[] = [
       { name: 'Express', brand: 'express' },
       { name: 'FastAPI', brand: 'fastapi' },
       { name: 'REST APIs', ui: 'api' },
+      { name: 'WebSockets', ui: 'realtime' },
       { name: 'BullMQ', ui: 'queue' },
+      { name: 'Celery', brand: 'celery' },
       { name: 'Razorpay', brand: 'razorpay' },
     ],
   },
@@ -92,8 +96,10 @@ export const skillGroups: SkillGroup[] = [
     skills: [
       { name: 'LLM APIs', ui: 'llm' },
       { name: 'Agentic Workflows', ui: 'agent' },
+      { name: 'n8n', brand: 'n8n' },
       { name: 'LangChain', brand: 'langchain' },
       { name: 'LangGraph', brand: 'langgraph' },
+      { name: 'LangSmith', ui: 'trace' },
       { name: 'MCP', brand: 'modelcontextprotocol' },
     ],
   },
@@ -101,16 +107,22 @@ export const skillGroups: SkillGroup[] = [
     title: 'Databases',
     skills: [
       { name: 'MongoDB', brand: 'mongodb' },
+      { name: 'PostgreSQL', brand: 'postgresql' },
       { name: 'Redis', brand: 'redis' },
+      { name: 'Pinecone', ui: 'database' },
+      { name: 'Qdrant', brand: 'qdrant' },
     ],
   },
   {
     title: 'DevOps & Tools',
     skills: [
       { name: 'Docker', brand: 'docker' },
+      { name: 'AWS', ui: 'cloud' },
       { name: 'Git', brand: 'git' },
       { name: 'GitHub Actions', brand: 'githubactions' },
       { name: 'Linux', brand: 'linux' },
+      { name: 'Postman', brand: 'postman' },
+      { name: 'Jira', brand: 'jira' },
       { name: 'Figma', brand: 'figma' },
       { name: 'Cursor', brand: 'cursor' },
       { name: 'Claude Code', brand: 'claude' },

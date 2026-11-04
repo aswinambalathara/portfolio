@@ -1,9 +1,29 @@
-import { Bot, Layers, ListOrdered, Sparkles, Webhook } from 'lucide-react'
+import {
+  Activity,
+  Bot,
+  Cloud,
+  Database,
+  Layers,
+  ListOrdered,
+  Radio,
+  Sparkles,
+  Webhook,
+} from 'lucide-react'
 
 import { BrandIcon } from '@/components/brand-icon'
 import { skillGroups, type Skill } from '@/content/site'
 
-const uiIcons = { api: Webhook, llm: Sparkles, agent: Bot, state: Layers, queue: ListOrdered }
+const uiIcons = {
+  api: Webhook,
+  llm: Sparkles,
+  agent: Bot,
+  state: Layers,
+  queue: ListOrdered,
+  realtime: Radio,
+  trace: Activity,
+  database: Database,
+  cloud: Cloud,
+}
 
 const skillsByName = new Map(skillGroups.flatMap((group) => group.skills).map((s) => [s.name, s]))
 
