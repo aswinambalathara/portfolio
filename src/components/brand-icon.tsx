@@ -1,5 +1,7 @@
 import * as icons from 'simple-icons'
 
+import { extraBrandIcons } from '@/components/extra-brand-icons'
+
 type SimpleIcon = { title: string; path: string; hex: string }
 
 const bySlug = icons as unknown as Record<string, SimpleIcon | undefined>
@@ -22,7 +24,9 @@ export function BrandIcon({
   className?: string
   colored?: boolean
 }) {
-  const icon = slug ? bySlug[`si${slug.charAt(0).toUpperCase()}${slug.slice(1)}`] : undefined
+  const extra = slug ? extraBrandIcons[slug] : undefined
+  const icon =
+    extra ?? (slug ? bySlug[`si${slug.charAt(0).toUpperCase()}${slug.slice(1)}`] : undefined)
   if (!icon) return null
   return (
     <svg
@@ -31,7 +35,7 @@ export function BrandIcon({
       className={`shrink-0 fill-current ${className}`}
       style={colored ? { color: readableHex(icon.hex) } : undefined}
     >
-      <path d={icon.path} />
+      <path d={icon.path} fillRule={extra ? 'evenodd' : undefined} />
     </svg>
   )
 }

@@ -1,14 +1,4 @@
-import {
-  Activity,
-  Bot,
-  Cloud,
-  Database,
-  Layers,
-  ListOrdered,
-  Radio,
-  Sparkles,
-  Webhook,
-} from 'lucide-react'
+import { Bot, Cloud, Database, Layers, ListOrdered, Radio, Sparkles, Webhook } from 'lucide-react'
 
 import { BrandIcon } from '@/components/brand-icon'
 import { skillGroups, type Skill } from '@/content/site'
@@ -20,7 +10,6 @@ const uiIcons = {
   state: Layers,
   queue: ListOrdered,
   realtime: Radio,
-  trace: Activity,
   database: Database,
   cloud: Cloud,
 }

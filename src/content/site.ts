@@ -8,7 +8,7 @@ export type Social = { platform: 'github' | 'linkedin'; href: string }
 export type Skill = {
   name: string
   brand?: string
-  ui?: 'api' | 'llm' | 'agent' | 'state' | 'queue' | 'realtime' | 'trace' | 'database' | 'cloud'
+  ui?: 'api' | 'llm' | 'agent' | 'state' | 'queue' | 'realtime' | 'database' | 'cloud'
 }
 
 export type SkillGroup = { title: string; skills: Skill[] }
@@ -99,7 +99,7 @@ export const skillGroups: SkillGroup[] = [
       { name: 'n8n', brand: 'n8n' },
       { name: 'LangChain', brand: 'langchain' },
       { name: 'LangGraph', brand: 'langgraph' },
-      { name: 'LangSmith', ui: 'trace' },
+      { name: 'LangSmith', brand: 'langsmith' },
       { name: 'MCP', brand: 'modelcontextprotocol' },
     ],
   },
