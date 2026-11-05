@@ -88,4 +88,4 @@ jobs:
             "deploy@$HOST" "deploy portfolio $TAG" <deploy/compose.prod.yaml
 
       - name: Check the public site
-        run: curl -fsS --retry 5 --retry-delay 3 --retry-all-errors https://portfolio.aswin-ambalathara.space/healthz
+        run: curl -fsS --retry 5 --retry-delay 3 --retry-all-errors https://aswin-ambalathara.space/healthz

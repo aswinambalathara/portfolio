@@ -16,9 +16,9 @@ first. The portfolio's entry there: app `portfolio` on `primary`, port 3100.
 | `/etc/nginx/sites-available/portfolio.conf`, `/etc/nginx/snippets/portfolio-tls.conf` | Reverse proxy, downloaded from this repo | `root` |
 | `/etc/letsencrypt/live/portfolio/` | HTTPS certificate for all three hostnames, renewed by certbot's timer | `root` |
 
-The site answers on `portfolio.aswin-ambalathara.space`, the bare domain `aswin-ambalathara.space`
-and `www.aswin-ambalathara.space`. Its pages name `portfolio.` as the canonical URL (`site.url`), so
-search engines treat them as one site.
+The site lives on the bare domain `aswin-ambalathara.space`, which is also its canonical URL
+(`site.url`). `portfolio.aswin-ambalathara.space` and `www.aswin-ambalathara.space` 301-redirect to
+it, so search engines see one site.
 
 The site has no secrets, so there is no env file on the server.
 
