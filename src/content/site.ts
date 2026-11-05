@@ -39,13 +39,20 @@ export type Project = {
 
 export const site = {
   name: 'Aswin Nair T M',
+  // The name on social profiles; shown next to `name` in titles and structured data for search.
+  alternateName: 'Aswin Ambalathara',
   firstName: 'Aswin',
   role: 'Full-Stack Developer · AI Agents',
+  jobTitle: 'Full-Stack Developer',
   tagline: 'I build full-stack web apps and the AI agents that power them.',
+  // Search-result summary for the home page.
+  description:
+    'Aswin Nair T M (Aswin Ambalathara) is a full-stack developer in Trivandrum, Kerala, building Next.js and MERN web apps and AI agents with Python and LLMs.',
+  location: { city: 'Trivandrum', region: 'Kerala', country: 'IN' },
   intro:
     'Full-stack developer (MERN · Next.js) with 2 years of experience, currently building agentic workflows with Python and LLMs. Based in Trivandrum, Kerala.',
   availability: 'Open to roles · Remote, Kerala, Bengaluru, Chennai, Dubai',
-  url: 'https://portfolio.aswin-ambalathara.space',
+  url: 'https://aswin-ambalathara.space',
 
   email: 'aswinnairtm@gmail.com',
   // The Contact page chat posts here: the n8n "Portfolio AI Chatbot" workflow, which answers from
@@ -54,10 +61,10 @@ export const site = {
   // TODO: put the résumé at public/resume.pdf, then set this to '/resume.pdf'. Empty hides the buttons.
   resumeUrl: '',
   avatarUrl: '/avatar.jpg',
-  // TODO: LinkedIn URL. Entries with an empty href are hidden.
+  // Entries with an empty href are hidden.
   socials: [
     { platform: 'github', href: 'https://github.com/aswinambalathara' },
-    { platform: 'linkedin', href: '' },
+    { platform: 'linkedin', href: 'https://www.linkedin.com/in/aswinambalathara' },
   ] satisfies Social[] as Social[],
 }
 

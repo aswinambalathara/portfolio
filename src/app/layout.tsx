@@ -5,22 +5,45 @@ import { Nav } from '@/components/nav'
 import { Particles } from '@/components/particles'
 import { ScrollReveal } from '@/components/scroll-reveal'
 import { SiteFooter } from '@/components/site-footer'
-import { site } from '@/content/site'
+import { coreStacks, site } from '@/content/site'
 import './globals.css'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
 
+const homeTitle = `${site.name} (${site.alternateName}) · ${site.role}`
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: `${site.name} · ${site.role}`, template: `%s · ${site.name}` },
-  description: site.tagline,
+  title: { default: homeTitle, template: `%s · ${site.name}` },
+  description: site.description,
   openGraph: {
     type: 'website',
-    title: `${site.name} · ${site.role}`,
-    description: site.tagline,
+    title: homeTitle,
+    description: site.description,
     siteName: site.name,
   },
+  twitter: { card: 'summary_large_image' },
+}
+
+// Schema.org Person, so search engines link both names, the profiles and this site to one person.
+const personJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  alternateName: site.alternateName,
+  url: site.url,
+  image: new URL(site.avatarUrl, site.url).href,
+  jobTitle: site.jobTitle,
+  description: site.description,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.location.city,
+    addressRegion: site.location.region,
+    addressCountry: site.location.country,
+  },
+  knowsAbout: [...new Set(coreStacks.flatMap((stack) => stack.skills))],
+  sameAs: site.socials.map((social) => social.href).filter(Boolean),
 }
 
 export const viewport: Viewport = {
@@ -37,6 +60,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       data-scroll-behavior="smooth"
     >
       <body className="flex min-h-svh flex-col">
+        <script
+          type="application/ld+json"
+          // Escaping `<` keeps the JSON from closing the script tag early.
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(personJsonLd).replace(/</g, '\\u003c'),
+          }}
+        />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-bg"
