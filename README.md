@@ -1,8 +1,8 @@
 # Portfolio
 
-One-page developer portfolio for Aswin Nair T M: hero, skills, projects and contact.
+Developer portfolio for Aswin Nair T M (Aswin Ambalathara): home, skills, projects and contact.
 
-**Live site:** https://portfolio.aswin-ambalathara.space
+**Live site:** https://aswin-ambalathara.space
 
 ## Tech stack
 
