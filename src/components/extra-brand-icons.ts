@@ -1,7 +1,14 @@
 // Current LangChain-family logos from Lobe Icons (MIT, @lobehub/icons-static-svg 1.80.0).
 // Simple Icons has an older LangChain mark and no LangSmith. Paths use the even-odd fill rule.
 
+// LinkedIn was removed from Simple Icons at the brand's request; this is its last path (CC0).
+
 export const extraBrandIcons: Record<string, { title: string; path: string; hex: string }> = {
+  linkedin: {
+    title: 'LinkedIn',
+    hex: '0A66C2',
+    path: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.949 1.637-2.088 3.368-2.088 3.597 0 4.263 2.368 4.263 4.674v4.305zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z',
+  },
   langchain: {
     title: 'LangChain',
     hex: '1C3C3C',
