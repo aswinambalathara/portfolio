@@ -1,7 +1,7 @@
 import { FileText, FolderGit2, Mail } from 'lucide-react'
 import Link from 'next/link'
 
-import { BrandIcon } from '@/components/brand-icon'
+import { SocialLinks } from '@/components/social-links'
 import { site } from '@/content/site'
 
 const initials = site.name
@@ -14,8 +14,6 @@ const secondary =
   'inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-5 py-2.5 text-sm font-medium transition-colors hover:border-accent/60 hover:text-accent'
 
 export function Hero() {
-  const socials = site.socials.filter((social) => social.href)
-
   return (
     <section
       aria-label="Introduction"
@@ -79,22 +77,7 @@ export function Hero() {
         </Link>
       </div>
 
-      {socials.length > 0 && (
-        <ul className="mt-6 flex items-center gap-2">
-          {socials.map((social) => (
-            <li key={social.platform}>
-              <a
-                href={social.href}
-                rel="me noopener"
-                aria-label={social.platform === 'github' ? 'GitHub' : 'LinkedIn'}
-                className="grid size-10 place-items-center rounded-full text-muted transition-colors hover:bg-white/5 hover:text-fg"
-              >
-                <BrandIcon slug={social.platform} className="size-5" />
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+      <SocialLinks className="mt-6" />
     </section>
   )
 }
